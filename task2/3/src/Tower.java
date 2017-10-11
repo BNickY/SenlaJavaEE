@@ -1,7 +1,8 @@
 public class Tower implements IProductPart{
     private static final String TOWER = "Tower";
+
     Tower(){
-        System.out.println(TOWER + " constructor");
+        System.out.println(TOWER + " has build");
     }
 
     @Override

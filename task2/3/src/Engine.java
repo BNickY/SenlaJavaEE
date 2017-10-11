@@ -2,7 +2,7 @@ public class Engine implements IProductPart{
     private static final String ENGINE = "Engine";
 
     Engine(){
-        System.out.println(ENGINE + " constructor");
+        System.out.println(ENGINE + " has build");
     }
 
     @Override

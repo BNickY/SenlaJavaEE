@@ -11,13 +11,15 @@ public class AssemblyLine implements IAssemblyLine{
     }
 
     @Override
-    public IProduct assembleProduct(IProduct iProduct) {
-        iProduct.installFirstPart(body.buildProductPart());
-        iProduct.installSecondPart(engine.buildProductPart());
-        iProduct.installThirdPart(tower.buildProductPart());
+    public IProduct assembleProduct(IProduct product) {
+        System.out.println("Tank assembling has started");
 
-        System.out.println("Assemble is done");
+        product.installFirstPart(body.buildProductPart());
+        product.installSecondPart(engine.buildProductPart());
+        product.installThirdPart(tower.buildProductPart());
 
-        return iProduct;
+        System.out.println("Tank assembling has finished");
+
+        return product;
     }
 }
