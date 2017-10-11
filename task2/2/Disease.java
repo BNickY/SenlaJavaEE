@@ -2,8 +2,8 @@ public class Disease {
     private String disease;
 
     public Disease(String disease){
+        System.out.println("Disease");
         this.disease = disease;
-        System.out.println("Class Disease");
     }
 
     public String getDisease() {

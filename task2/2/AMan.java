@@ -3,9 +3,9 @@ public abstract class AMan {
     private String surname;
 
     public AMan(String name, String surname){
+        System.out.println("AMan");
         this.name = name;
         this.surname = surname;
-        System.out.println("Class AMan");
     }
 
     public String getName() {

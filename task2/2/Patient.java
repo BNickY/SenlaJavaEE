@@ -4,7 +4,7 @@ public class Patient extends AMan{
 
     public Patient(String name, String surname){
         super(name,surname);
-        System.out.println("Class Patient");
+        System.out.println("Patient");
     }
 
     public MedicalCard getMedicalCard() {

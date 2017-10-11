@@ -1,11 +1,13 @@
+import java.util.Arrays;
+
 public class MedicalCard {
     private int cardNumber;
     private Disease[] diseasesHistory;
 
     public MedicalCard(int cardNumber, Disease[] diseasesList){
+        System.out.println("MedicalCard");
         this.cardNumber = cardNumber;
         diseasesHistory = diseasesList;
-        System.out.println("Class MedicalCard");
     }
 
     public int getCardNumber() {
@@ -21,6 +23,8 @@ public class MedicalCard {
     }
 
     public void addNewDisease(Disease newDisease){
-       //add  new disease
+       Disease[] newDiseasesHistory = Arrays.copyOf(diseasesHistory,diseasesHistory.length + 1);
+       newDiseasesHistory[newDiseasesHistory.length - 1] = newDisease;
+       diseasesHistory = Arrays.copyOf(newDiseasesHistory,newDiseasesHistory.length);
     }
 }

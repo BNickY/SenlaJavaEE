@@ -1,12 +1,15 @@
+import java.util.Arrays;
+
 public class Station {
     private int stationNumber;
     private Address[] addresses;
     private Patient[] patients;
 
-    public Station(int stationNumber, Address[] addresses) {
+    public Station(int stationNumber, Address[] addresses, Patient[] patients) {
+        System.out.println("Station");
         this.stationNumber = stationNumber;
         this.addresses = addresses;
-        System.out.println("Class Station");
+        this.patients = patients;
     }
 
     public int getStationNumber() {
@@ -33,7 +36,9 @@ public class Station {
         this.patients = patients;
     }
 
-    public void addPatients(Patient[] newPatients){
-        //add patients
+    public void addPatient(Patient patient){
+        Patient[] newPatients = Arrays.copyOf(patients,patients.length+1);
+        newPatients[newPatients.length-1] = patient;
+        patients = Arrays.copyOf(newPatients,newPatients.length);
     }
 }

@@ -3,9 +3,9 @@ public class Address {
     private String street;
 
     public Address(String district, String street) {
+        System.out.println("Address");
         this.district = district;
         this.street = street;
-        System.out.println("Class Address");
     }
 
     public String getDistrict() {
