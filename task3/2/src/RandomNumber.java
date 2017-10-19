@@ -1,12 +1,12 @@
 import java.util.Random;
 
-class RandomNumbers {
+public class RandomNumber {
 
     private int amount;
     private int[] randomNumbers;
     private Random random;
 
-    RandomNumbers(int amount) {
+    RandomNumber(int amount) {
         this.amount = amount;
         random = new Random();
         randomNumbers = new int[amount];
@@ -19,10 +19,6 @@ class RandomNumbers {
         }
     }
 
-    void showNumbers(){
-        for(int i : randomNumbers) System.out.print(i + " ");
-    }
-
     int getFirstDigitsSum(){
         int sum = 0;
 
@@ -32,4 +28,29 @@ class RandomNumbers {
 
         return sum;
     }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public int[] getRandomNumbers() {
+        return randomNumbers;
+    }
+
+    public void setRandomNumbers(int[] randomNumbers) {
+        this.randomNumbers = randomNumbers;
+    }
+
+    public Random getRandom() {
+        return random;
+    }
+
+    public void setRandom(Random random) {
+        this.random = random;
+    }
+
 }
