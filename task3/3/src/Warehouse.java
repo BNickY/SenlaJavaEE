@@ -18,7 +18,7 @@ public class Warehouse implements ICountable {
             products[tos] = product;
             tos++;
         }else
-            System.out.println("Warehouse is full!");
+           Printer.printMessage("Warehouse is full!");
     }
 
     public void removeProduct(int id){
@@ -38,14 +38,10 @@ public class Warehouse implements ICountable {
         }
         if(count==0)
         {
-            System.out.print("Product not found!");
+            Printer.printMessage("Product not found!");
         }
     }
 
-    public void getWarehouseInfo(){
-        for(int i = 0; i < tos; i++)
-            System.out.println(products[i]);
-    }
 
     @Override
     public double countWeight() {
@@ -82,4 +78,7 @@ public class Warehouse implements ICountable {
         this.products = products;
     }
 
+    public int getTos() {
+        return tos;
+    }
 }
