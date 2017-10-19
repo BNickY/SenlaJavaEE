@@ -1,6 +1,6 @@
 public class StringArray {
 
-    public static void sortStringArray(String[] array){
+    public static String[] sortStringArray(String[] array){
         for (int i = 0; i < array.length; i++){
             for (int j = i + 1; j < array.length; j++){
                 if(array[j].compareTo(array[i]) < 0){
@@ -10,6 +10,7 @@ public class StringArray {
                 }
             }
         }
+        return array;
     }
 
     public static void showStringArray(String[] array){
