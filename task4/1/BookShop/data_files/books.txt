@@ -1,0 +1,5 @@
+0/Tolstoy/War and Peace/12.2/true/1868-03-04/2015-07-04/0
+1/Dostoevsky/Idiot/9.80/true/1868-02-03/2015-03-20/0
+2/Marvel/Tor/15.2/true/2002-02-03/2017-01-04/0
+3/Marvel/Spiderman/20/true/2005-01-01/2017-06-20/0
+4/Dostoevsky/Demons/5.5/true/1872-03-02/2016-10-11/0
