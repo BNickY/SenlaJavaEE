@@ -1,2 +1,3 @@
-java -jar task1.jar
-
+@echo
+java -jar BookShop.jar
+pause
