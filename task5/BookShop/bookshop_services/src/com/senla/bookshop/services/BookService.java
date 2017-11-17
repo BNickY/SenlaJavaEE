@@ -2,11 +2,14 @@ package com.senla.bookshop.services;
 
 import com.senla.bookshop.api.entities.IBook;
 import com.senla.bookshop.api.entities.IOrder;
+import com.senla.bookshop.api.entities.IRequest;
 import com.senla.bookshop.api.entities.orderstatus.OrderStatus;
+import com.senla.bookshop.api.entities.requeststatus.RequestStatus;
 import com.senla.bookshop.api.repositories.IBookRepository;
 import com.senla.bookshop.api.services.IBookService;
 import com.senla.bookshop.repositories.BookRepository;
 import com.senla.bookshop.repositories.OrderRepository;
+import com.senla.bookshop.repositories.RequestRepository;
 import com.senla.bookshop.utils.DateUtil;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,7 +26,7 @@ public class BookService implements IBookService {
 
     @Override
     public List<IBook> getAllBooks() {
-        return bookRepository.getAllBooks();
+        return bookRepository.getBooks();
     }
 
     @Override
@@ -40,14 +43,14 @@ public class BookService implements IBookService {
 
     @Override
     public void addBook(IBook book) {
-        OrderRepository orderRepository = OrderRepository.getInstance();
-        List<IOrder> orders = orderRepository.getAllOrders();
+        List<IRequest> requests = RequestRepository.getInstance().getRequests();
         List<IBook> books = new ArrayList<>(getAllBooks());
         if (books.contains(book)) {
             books.get(books.indexOf(book)).setInStoke(true);
-            for(IOrder order : orders)
-                if(order.getBookId() == book.getId())
-                    order.setOrderStatus(OrderStatus.PERFORMED);
+            book.setReceiptDate(LocalDate.now());
+            for(IRequest request : requests)
+                if(request.getBookId() == book.getId())
+                    request.setRequestStatus(RequestStatus.PERFORMED);
             return;
         }
 
@@ -59,6 +62,16 @@ public class BookService implements IBookService {
     @Override
     public void deleteBook(long id) {
         bookRepository.deleteBook(id);
+        List<IOrder> orders = OrderRepository.getInstance().getOrders();
+        List<IRequest> requests = RequestRepository.getInstance().getRequests();
+        for(IRequest request : requests)
+            if(request.getBookId() == id)
+                request.setRequestStatus(RequestStatus.CANCELED);
+        for(IOrder order : orders)
+            if(order.getBookId() == id){
+                order.setExecutionDate(LocalDate.now());
+                order.setOrderStatus(OrderStatus.CANCELED);
+            }
     }
 
     @Override

@@ -4,7 +4,6 @@ import com.senla.bookshop.api.entities.IRequest;
 import com.senla.bookshop.api.repositories.IRequestRepository;
 import com.senla.bookshop.utils.Converter;
 import com.senla.bookshop.utils.TextFileUtil;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +13,7 @@ public class RequestRepository implements IRequestRepository{
     private TextFileUtil fileUtil = new TextFileUtil("requests.txt");
     private static long nextId = 0;
 
-    public RequestRepository(){}
+    private RequestRepository(){}
 
     public static synchronized RequestRepository getInstance(){
         if(requestRepository == null)
@@ -23,7 +22,7 @@ public class RequestRepository implements IRequestRepository{
         return requestRepository;
     }
 
-    public List<IRequest> getAllRequests(){
+    public List<IRequest> getRequests(){
         return requests;
     }
 

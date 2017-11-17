@@ -7,7 +7,6 @@ import com.senla.bookshop.api.services.IRequestService;
 import com.senla.bookshop.repositories.BookRepository;
 import com.senla.bookshop.repositories.RequestRepository;
 import com.senla.bookshop.utils.ComparisonUtil;
-
 import java.time.LocalDate;
 import java.util.*;
 
@@ -18,10 +17,9 @@ public class RequestService implements IRequestService {
         requestRepository = RequestRepository.getInstance();
     }
 
-
     @Override
     public List<IRequest> getAllRequests() {
-        return requestRepository.getAllRequests();
+        return requestRepository.getRequests();
     }
 
     @Override
@@ -55,35 +53,41 @@ public class RequestService implements IRequestService {
     public List<IRequest> sortRequestsByAlphabet() {
         BookRepository bookRepository = BookRepository.getInstance();
         List<IRequest> requests = new ArrayList<>(getAllRequests());
-        requests.sort((o1, o2) -> bookRepository.getBook(o1.getBookId()).getTitle()
-                .compareToIgnoreCase(bookRepository.getBook(o2.getBookId()).getTitle()));
+        requests.sort((o1, o2) -> {
+            int checkValue = ComparisonUtil.compareNullReferences(o1, o2);
+            if (checkValue == 2) {
+                return bookRepository.getBook(o1.getBookId()).getTitle()
+                        .compareToIgnoreCase(bookRepository.getBook(o2.getBookId()).getTitle());
+            }
+            return checkValue;
+
+        });
         return requests;
     }
 
     @Override
     public List<IRequest> sortRequestsByAmount() {
         List<IRequest> requests = new ArrayList<>(getAllRequests());
-        HashMap<Long,Integer> counts = new HashMap<>();
-        HashMap<IRequest,Integer> data = new HashMap<>();
+        HashMap<Long,Integer> occurrencesCount = new HashMap<>();
+        HashMap<IRequest,Integer> requestsOccurrences = new HashMap<>();
 
         for (IRequest request : requests) {
-            if (counts.containsKey(request.getBookId())) {
-                Integer count = counts.get(request.getBookId());
-                counts.put(request.getBookId(), ++count);
+            if (occurrencesCount.containsKey(request.getBookId())) {
+                Integer count = occurrencesCount.get(request.getBookId());
+                occurrencesCount.put(request.getBookId(), ++count);
             } else
-                counts.put(request.getBookId(), 1);
+                occurrencesCount.put(request.getBookId(), 1);
         }
 
-        for(Long key : counts.keySet()){
+        for(Long key : occurrencesCount.keySet()){
             for(IRequest request: requests){
                 if(request.getBookId() == key){
-                    data.put(request,counts.get(key));
+                    requestsOccurrences.put(request,occurrencesCount.get(key));
                 }
             }
         }
 
-
-        Set<Map.Entry<IRequest, Integer>> set = data.entrySet();
+        Set<Map.Entry<IRequest, Integer>> set = requestsOccurrences.entrySet();
 
         ArrayList<Map.Entry<IRequest, Integer>> list = new ArrayList<>(set);
 

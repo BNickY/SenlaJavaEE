@@ -14,6 +14,4 @@ public interface IRequest extends IEntity{
     void setRequestStatus(RequestStatus requestStatus);
 
     long getBookId();
-
-    void setBookId(long bookId);
 }

@@ -1,13 +1,11 @@
 package com.senla.bookshop.services;
 
-import com.senla.bookshop.api.entities.IBook;
 import com.senla.bookshop.api.entities.IOrder;
 import com.senla.bookshop.api.entities.orderstatus.OrderStatus;
 import com.senla.bookshop.api.repositories.IOrderRepository;
 import com.senla.bookshop.api.services.IOrderService;
 import com.senla.bookshop.repositories.BookRepository;
 import com.senla.bookshop.repositories.OrderRepository;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -24,7 +22,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public List<IOrder> getAllOrders() {
-        return orderRepository.getAllOrders();
+        return orderRepository.getOrders();
     }
 
     @Override

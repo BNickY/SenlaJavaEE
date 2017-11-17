@@ -22,7 +22,7 @@ public class OrderRepository implements IOrderRepository{
         return orderRepository;
     }
 
-    public List<IOrder> getAllOrders(){
+    public List<IOrder> getOrders(){
         return orders;
     }
 

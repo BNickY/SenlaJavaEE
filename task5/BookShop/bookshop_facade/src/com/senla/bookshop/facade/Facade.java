@@ -14,22 +14,24 @@ import com.senla.bookshop.api.services.IRequestService;
 import com.senla.bookshop.services.BookService;
 import com.senla.bookshop.services.OrderService;
 import com.senla.bookshop.services.RequestService;
-
 import java.time.LocalDate;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Facade implements IFacade {
-    private IBookService bookService;
-    private IOrderService orderService;
-    private IRequestService requestService;
+    private static Logger log = Logger.getLogger(Facade.class.getName());
+    private static Facade facade;
+    private IBookService bookService = new BookService();
+    private IOrderService orderService = new OrderService();
+    private IRequestService requestService = new RequestService();
 
-    public Facade() {
-        bookService = new BookService();
-        orderService = new OrderService();
-        requestService = new RequestService();
-        bookService.readFromFile();
-        orderService.readFromFile();
-        requestService.readFromFile();
+    private Facade() {}
+
+    public static synchronized Facade getInstance(){
+        if(facade == null)
+            facade = new Facade();
+
+        return facade;
     }
 
     @Override
@@ -118,7 +120,7 @@ public class Facade implements IFacade {
     }
 
     @Override
-    public int showAmountOfPerformedOrders(LocalDate startDate, LocalDate endDate) {
+    public int getAmountOfPerformedOrders(LocalDate startDate, LocalDate endDate) {
         return orderService.getAmountOfPerformedOrders(startDate,endDate);
     }
 
@@ -172,6 +174,14 @@ public class Facade implements IFacade {
         return requestService.sortRequestsByAmount();
     }
 
+    @Override
+    public void load() {
+        bookService.readFromFile();
+        orderService.readFromFile();
+        requestService.readFromFile();
+    }
+
+    @Override
     public void exit(){
         bookService.saveToFile();
         orderService.saveToFile();

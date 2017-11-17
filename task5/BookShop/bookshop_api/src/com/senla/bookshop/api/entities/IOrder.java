@@ -7,8 +7,6 @@ public interface IOrder extends IEntity{
 
     long getBookId();
 
-    void setBookId(long bookId);
-
     double getPrice();
 
     void setPrice(double price);

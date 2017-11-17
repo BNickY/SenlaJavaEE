@@ -9,7 +9,6 @@ import com.senla.bookshop.api.entities.requeststatus.RequestStatus;
 import com.senla.bookshop.entities.Book;
 import com.senla.bookshop.entities.Order;
 import com.senla.bookshop.entities.Request;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ public class Converter {
     }
 
     private static String convertEntityToString(IEntity entity){
-        if(entity.getClass() == IBook.class){
+        if(entity.getClass() == Book.class){
             IBook book = (Book) entity;
             return book.getId() + "/" +
                     book.getTitle() + "/" +
@@ -35,7 +34,7 @@ public class Converter {
                     book.getInStoke() + "/" +
                     book.getPublishDate() + "/" +
                     book.getReceiptDate();
-        }else if(entity.getClass() == IOrder.class){
+        }else if(entity.getClass() == Order.class){
             IOrder order = (Order) entity;
             return order.getId() + "/" +
                     order.getBookId() + "/" +
@@ -43,7 +42,7 @@ public class Converter {
                     order.getSubmissionDate() + "/" +
                     order.getExecutionDate() + "/" +
                     order.getOrderStatus();
-        }else if(entity.getClass() == IRequest.class){
+        }else if(entity.getClass() == Request.class){
             IRequest request = (Request) entity;
             return request.getId() + "/" +
                     request.getBookId() + "/" +

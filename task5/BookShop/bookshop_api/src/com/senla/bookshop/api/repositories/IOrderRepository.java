@@ -1,12 +1,11 @@
 package com.senla.bookshop.api.repositories;
 
 import com.senla.bookshop.api.entities.IOrder;
-
 import java.util.List;
 
 public interface IOrderRepository {
 
-    List<IOrder> getAllOrders();
+    List<IOrder> getOrders();
 
     void addOrder(IOrder order);
 

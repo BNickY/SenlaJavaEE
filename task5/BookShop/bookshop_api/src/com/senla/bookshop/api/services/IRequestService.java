@@ -1,6 +1,5 @@
 package com.senla.bookshop.api.services;
 
-import com.senla.bookshop.api.entities.IBook;
 import com.senla.bookshop.api.entities.IRequest;
 import java.util.List;
 

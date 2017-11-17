@@ -31,10 +31,6 @@ public class Order implements IOrder{
         return bookId;
     }
 
-    public void setBookId(long bookId) {
-        this.bookId = bookId;
-    }
-
     public double getPrice() {
         return price;
     }

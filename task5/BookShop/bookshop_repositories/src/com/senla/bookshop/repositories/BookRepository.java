@@ -22,7 +22,7 @@ public class BookRepository implements IBookRepository{
         return bookRepository;
     }
 
-    public List<IBook> getAllBooks(){
+    public List<IBook> getBooks(){
         return books;
     }
 

@@ -27,7 +27,7 @@ public interface IFacade {
     List<IOrder> getAllOrders();
     List<IOrder> getPerformedOrders(LocalDate startDate, LocalDate endDate);
     double getEarnedMoney(LocalDate startDate, LocalDate endDate);
-    int showAmountOfPerformedOrders(LocalDate startDate, LocalDate endDate);
+    int getAmountOfPerformedOrders(LocalDate startDate, LocalDate endDate);
     void completeAnOrder(long id);
     List<IOrder> sortOrdersByPrice();
     List<IOrder> sortOrdersByStatus();
@@ -39,4 +39,7 @@ public interface IFacade {
     void addRequest(IRequest request);
     List<IRequest> sortRequestsByAlphabet();
     List<IRequest> sortRequestsByAmount();
+
+    void load();
+    void exit();
 }

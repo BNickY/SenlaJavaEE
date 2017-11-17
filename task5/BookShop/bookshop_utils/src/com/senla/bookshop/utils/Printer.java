@@ -4,6 +4,9 @@ import com.senla.bookshop.api.entities.IEntity;
 import java.util.List;
 
 public class Printer {
+    public static void printMessage(Number number){
+        System.out.println(number);
+    }
 
     public static void printMessage(String message) {
         System.out.println(message);
