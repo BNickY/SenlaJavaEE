@@ -17,7 +17,6 @@ public class OrderService implements IOrderService {
 
     public OrderService(){
         orderRepository = OrderRepository.getInstance();
-        performedOrders = new ArrayList<>();
     }
 
     @Override
@@ -54,6 +53,7 @@ public class OrderService implements IOrderService {
     @Override
     public List<IOrder> getPerformedOrders(LocalDate startDate, LocalDate endDate) {
         List<IOrder> orders = getAllOrders();
+        performedOrders = new ArrayList<>();
         for (IOrder order : orders) {
             if (order != null && (order.getOrderStatus().compareTo(OrderStatus.PERFORMED) == 0 &
                     order.getExecutionDate().isAfter(startDate) &

@@ -3,6 +3,7 @@ package com.senla.bookshop.ui.entities;
 import com.senla.bookshop.facade.Facade;
 import com.senla.bookshop.ui.api.IObserver;
 import com.senla.bookshop.utils.ConsoleReader;
+import com.senla.bookshop.utils.Printer;
 
 public class MenuController implements IObserver {
     private Menu menu;
@@ -11,7 +12,8 @@ public class MenuController implements IObserver {
         Facade.getInstance().load();
         Builder builder = new Builder();
         builder.buildMenu();
-        Navigator navigator = new Navigator(builder.getRootMenu());
+        menu = builder.getRootMenu();
+        Navigator navigator = new Navigator(menu);
         navigator.addObserver(this);
         int menuPosition;
         do {
@@ -19,8 +21,11 @@ public class MenuController implements IObserver {
 
             menuPosition = ConsoleReader.getNextInt();
 
-            navigator.getCurrentMenu().getMenuItems().get(menuPosition - 1).doAction();
-            navigator.navigate(menuPosition);
+            if (menuPosition > 0 &&
+                    menuPosition <= navigator.getCurrentMenu().getMenuItems().size()) {
+                navigator.getCurrentMenu().getMenuItems().get(menuPosition - 1).doAction();
+                navigator.navigate(menuPosition);
+            }else Printer.printMessage("There is no such menu! Try again.");
         } while (menu != null);
     }
 

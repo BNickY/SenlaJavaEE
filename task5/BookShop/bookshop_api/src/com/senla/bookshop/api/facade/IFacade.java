@@ -3,42 +3,44 @@ package com.senla.bookshop.api.facade;
 import com.senla.bookshop.api.entities.IBook;
 import com.senla.bookshop.api.entities.IOrder;
 import com.senla.bookshop.api.entities.IRequest;
+import com.senla.bookshop.api.exeptions.DataNotExistException;
+
 import java.time.LocalDate;
 import java.util.List;
 
 public interface IFacade {
 
     void addBook(IBook book);
-    void deleteBook(long id);
-    IBook getBook(long id);
-    List<IBook> getAllBooks();
-    List<IBook> getUnsoldBooks();
-    List<IBook> sortBooksByPrice();
-    List<IBook> sortBooksByTitle();
-    List<IBook> sortBooksByPublishDate();
-    List<IBook> sortBooksByExistenceInStoke();
-    List<IBook> sortUnsoldBooksByPrice();
-    List<IBook> sortUnsoldBooksByReceiptDate();
+    void deleteBook(long id) throws DataNotExistException;
+    IBook getBook(long id) throws DataNotExistException;
+    List<IBook> getAllBooks() throws DataNotExistException;
+    List<IBook> getUnsoldBooks() throws DataNotExistException;
+    List<IBook> sortBooksByPrice() throws DataNotExistException;
+    List<IBook> sortBooksByTitle() throws DataNotExistException;
+    List<IBook> sortBooksByPublishDate() throws DataNotExistException;
+    List<IBook> sortBooksByExistenceInStoke() throws DataNotExistException;
+    List<IBook> sortUnsoldBooksByPrice() throws DataNotExistException;
+    List<IBook> sortUnsoldBooksByReceiptDate() throws DataNotExistException;
 
 
-    void addOrder(IOrder order);
-    void cancelOrder(long id);
-    IOrder getOrder(long id);
-    List<IOrder> getAllOrders();
-    List<IOrder> getPerformedOrders(LocalDate startDate, LocalDate endDate);
+    void addOrder(IOrder order) throws DataNotExistException;
+    void cancelOrder(long id) throws DataNotExistException;
+    IOrder getOrder(long id) throws DataNotExistException;
+    List<IOrder> getAllOrders() throws DataNotExistException;
+    List<IOrder> getPerformedOrders(LocalDate startDate, LocalDate endDate) throws DataNotExistException;
     double getEarnedMoney(LocalDate startDate, LocalDate endDate);
     int getAmountOfPerformedOrders(LocalDate startDate, LocalDate endDate);
-    void completeAnOrder(long id);
-    List<IOrder> sortOrdersByPrice();
-    List<IOrder> sortOrdersByStatus();
-    List<IOrder> sortOrdersByExecutionDate();
-    List<IOrder> sortPerformedOrdersByDate();
-    List<IOrder> sortPerformedOrdersByPrice();
+    void completeAnOrder(long id) throws DataNotExistException;
+    List<IOrder> sortOrdersByPrice() throws DataNotExistException;
+    List<IOrder> sortOrdersByStatus() throws DataNotExistException;
+    List<IOrder> sortOrdersByExecutionDate() throws DataNotExistException;
+    List<IOrder> sortPerformedOrdersByDate() throws DataNotExistException;
+    List<IOrder> sortPerformedOrdersByPrice() throws DataNotExistException;
 
-    List<IRequest> getAllRequests();
-    void addRequest(IRequest request);
-    List<IRequest> sortRequestsByAlphabet();
-    List<IRequest> sortRequestsByAmount();
+    List<IRequest> getAllRequests() throws DataNotExistException;
+    void addRequest(IRequest request) throws DataNotExistException;
+    List<IRequest> sortRequestsByAlphabet() throws DataNotExistException;
+    List<IRequest> sortRequestsByAmount() throws DataNotExistException;
 
     void load();
     void exit();

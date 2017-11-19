@@ -1,5 +1,6 @@
 package com.senla.bookshop.ui.actions.order;
 
+import com.senla.bookshop.api.exeptions.DataNotExistException;
 import com.senla.bookshop.ui.api.IAction;
 import com.senla.bookshop.facade.Facade;
 import com.senla.bookshop.utils.Printer;
@@ -8,6 +9,10 @@ public class SortOrdersByExecutionDate implements IAction{
 
     @Override
     public void execute() {
-        Printer.printArray(Facade.getInstance().sortOrdersByExecutionDate());
+        try {
+            Printer.printArray(Facade.getInstance().sortOrdersByExecutionDate());
+        } catch (DataNotExistException e) {
+
+        }
     }
 }

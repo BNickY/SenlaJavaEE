@@ -44,6 +44,7 @@ public class RequestRepository implements IRequestRepository{
 
     public void readFromFile() {
         requests = Converter.stringsToRequests(fileUtil.readDataFromFile());
-        nextId = requests.get(requests.size()-1).getId() + 1;
+        if(requests.size() > 0)
+            nextId = requests.get(requests.size()-1).getId() + 1;
     }
 }

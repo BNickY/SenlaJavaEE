@@ -33,8 +33,8 @@ public class Builder {
 
         Menu sortUnsoldBooksMenu = new Menu("==================================\nSort unsold books menu");
         List<MenuItem> sortUnsoldBooksMI = new ArrayList<>();
-        sortUnsoldBooksMI.add(new MenuItem("Sort by receipt date", new SortUnsoldBooksByReceiptDate(),mainMenu));
-        sortUnsoldBooksMI.add(new MenuItem("Sort by price", new SortUnsoldBooksByPrice(),mainMenu));
+        sortUnsoldBooksMI.add(new MenuItem("Sort by receipt date", new SortUnsoldBooksByReceiptDate(),sortUnsoldBooksMenu));
+        sortUnsoldBooksMI.add(new MenuItem("Sort by price", new SortUnsoldBooksByPrice(),sortUnsoldBooksMenu));
         sortUnsoldBooksMI.add(new MenuItem("Back", null, booksMenu));
         sortUnsoldBooksMenu.setMenuItems(sortUnsoldBooksMI);
 

@@ -48,6 +48,7 @@ public class BookRepository implements IBookRepository{
 
     public void readFromFile() {
         books = Converter.stringsToBooks(fileUtil.readDataFromFile());
-        nextId = books.get(books.size()-1).getId() + 1;
+        if(books.size() > 0)
+            nextId = books.get(books.size()-1).getId() + 1;
     }
 }
