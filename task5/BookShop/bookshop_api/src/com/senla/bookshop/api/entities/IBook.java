@@ -27,7 +27,4 @@ public interface IBook extends IEntity{
     LocalDate getReceiptDate();
 
     void setReceiptDate(LocalDate receiptDate);
-
-    @Override
-    boolean equals(Object obj);
 }

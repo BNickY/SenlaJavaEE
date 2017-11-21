@@ -41,10 +41,6 @@ public class Request implements IRequest{
         return bookId;
     }
 
-    public void setBookId(long bookId) {
-        this.bookId = bookId;
-    }
-
     @Override
     public long getId() {
         return id;

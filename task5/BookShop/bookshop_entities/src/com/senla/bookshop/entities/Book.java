@@ -90,27 +90,28 @@ public class Book implements IBook{
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) return false;
+    public int hashCode() {
+        int result;
+        long temp;
+        result = title.hashCode();
+        result = 31 * result + author.hashCode();
+        temp = Double.doubleToLongBits(price);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + publishDate.hashCode();
+        return result;
+    }
 
-        if (!Book.class.isAssignableFrom(obj.getClass())) {
-            return false;
-        }
-        final Book other = (Book) obj;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        if ((this.title == null) ? (other.title != null) : !this.title.equals(other.title))
-            return false;
+        Book book = (Book) o;
 
-        if (Double.compare(this.price,other.price) != 0 )
-            return false;
-
-        if ((this.author == null) ? (other.author != null) : !this.author.equals(other.author))
-            return false;
-
-        if(!this.publishDate.isEqual(other.getPublishDate()))
-            return false;
-
-        return true;
+        return Double.compare(book.price, price) == 0 &&
+                title.equals(book.title) &&
+                author.equals(book.author) &&
+                publishDate.equals(book.publishDate);
     }
 
     @Override

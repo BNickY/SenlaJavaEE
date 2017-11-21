@@ -22,7 +22,7 @@ public class BookRepository implements IBookRepository{
         return bookRepository;
     }
 
-    public List<IBook> getAllBooks(){
+    public List<IBook> getBooks(){
         return books;
     }
 
@@ -48,6 +48,7 @@ public class BookRepository implements IBookRepository{
 
     public void readFromFile() {
         books = Converter.stringsToBooks(fileUtil.readDataFromFile());
-        nextId = books.get(books.size()-1).getId() + 1;
+        if(books.size() > 0)
+            nextId = books.get(books.size()-1).getId() + 1;
     }
 }

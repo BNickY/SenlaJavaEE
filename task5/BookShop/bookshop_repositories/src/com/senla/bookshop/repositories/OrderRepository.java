@@ -22,7 +22,7 @@ public class OrderRepository implements IOrderRepository{
         return orderRepository;
     }
 
-    public List<IOrder> getAllOrders(){
+    public List<IOrder> getOrders(){
         return orders;
     }
 
@@ -44,6 +44,7 @@ public class OrderRepository implements IOrderRepository{
 
     public void readFromFile() {
         orders = Converter.stringsToOrders(fileUtil.readDataFromFile());
-        nextId = orders.get(orders.size()-1).getId() + 1;
+        if(orders.size() > 0)
+            nextId = orders.get(orders.size()-1).getId() + 1;
     }
 }

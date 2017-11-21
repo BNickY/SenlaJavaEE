@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface IBookRepository {
 
-    List<IBook> getAllBooks();
+    List<IBook> getBooks();
 
     void addBook(IBook book);
 
