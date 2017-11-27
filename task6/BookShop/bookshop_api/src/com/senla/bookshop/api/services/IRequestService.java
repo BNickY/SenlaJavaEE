@@ -1,6 +1,8 @@
 package com.senla.bookshop.api.services;
 
 import com.senla.bookshop.api.entities.IRequest;
+
+import java.io.IOException;
 import java.util.List;
 
 public interface IRequestService {
@@ -17,7 +19,9 @@ public interface IRequestService {
 
     List<IRequest> sortRequestsByAmount();
 
-    void saveToFile();
+    void setRequests(List<IRequest> requests);
 
-    void readFromFile();
+    void exportRequests(String file) throws IOException;
+
+    void importRequests(String file) throws IOException;
 }

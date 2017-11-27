@@ -7,6 +7,8 @@ import com.senla.bookshop.api.services.IRequestService;
 import com.senla.bookshop.repositories.BookRepository;
 import com.senla.bookshop.repositories.RequestRepository;
 import com.senla.bookshop.utils.ComparisonUtil;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -39,15 +41,6 @@ public class RequestService implements IRequestService {
         return requestRepository.getRequest(id);
     }
 
-    @Override
-    public void saveToFile() {
-        requestRepository.saveToFile();
-    }
-
-    @Override
-    public void readFromFile() {
-        requestRepository.readFromFile();
-    }
 
     @Override
     public List<IRequest> sortRequestsByAlphabet() {
@@ -107,5 +100,20 @@ public class RequestService implements IRequestService {
             output.add(entry.getKey());
         }
         return output;
+    }
+
+    @Override
+    public void setRequests(List<IRequest> requests) {
+        requestRepository.setRequests(requests);
+    }
+
+    @Override
+    public void exportRequests(String file) throws IOException {
+        requestRepository.exportRequests(file);
+    }
+
+    @Override
+    public void importRequests(String file) throws IOException {
+        requestRepository.importRequests(file);
     }
 }

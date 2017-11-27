@@ -1,6 +1,8 @@
 package com.senla.bookshop.api.services;
 
 import com.senla.bookshop.api.entities.IOrder;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -27,7 +29,9 @@ public interface IOrderService {
 
     List<IOrder> sortOrders(Comparator<IOrder> comparator, List<IOrder> orderList);
 
-    void saveToFile();
+    void setOrders(List<IOrder> orders);
 
-    void readFromFile();
+    void exportOrders(String file) throws IOException;
+
+    void importOrders(String file) throws IOException;
 }

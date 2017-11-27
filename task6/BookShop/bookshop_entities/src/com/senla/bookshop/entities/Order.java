@@ -2,10 +2,13 @@ package com.senla.bookshop.entities;
 
 import com.senla.bookshop.api.entities.IOrder;
 import com.senla.bookshop.api.entities.orderstatus.OrderStatus;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Order implements IOrder{
+public class Order implements Cloneable,IOrder,Serializable{
 
+    private static final long serialVersionUID = 2652367136138174329L;
     private long id;
     private long bookId;
     private double price;
@@ -71,6 +74,11 @@ public class Order implements IOrder{
     @Override
     public void setId(long id) {
         this.id = id;
+    }
+
+    @Override
+    public Order clone() throws CloneNotSupportedException {
+        return (Order)super.clone();
     }
 
     @Override

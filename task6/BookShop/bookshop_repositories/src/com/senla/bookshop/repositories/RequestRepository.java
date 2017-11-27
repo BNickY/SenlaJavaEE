@@ -4,13 +4,13 @@ import com.senla.bookshop.api.entities.IRequest;
 import com.senla.bookshop.api.repositories.IRequestRepository;
 import com.senla.bookshop.utils.Converter;
 import com.senla.bookshop.utils.TextFileUtil;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RequestRepository implements IRequestRepository{
     private static RequestRepository requestRepository;
     private List<IRequest> requests = new ArrayList<>();
-    private TextFileUtil fileUtil = new TextFileUtil("requests.txt");
     private static long nextId = 0;
 
     private RequestRepository(){}
@@ -38,13 +38,28 @@ public class RequestRepository implements IRequestRepository{
         return null;
     }
 
-    public void saveToFile() {
-        fileUtil.writeDataToFile(Converter.entitiesToStrings(requests));
+    @Override
+    public void setRequests(List<IRequest> requests) {
+        this.requests = requests;
+        if(this.requests.size() > 0)
+            nextId = this.requests.get(this.requests.size()-1).getId() + 1;
     }
 
-    public void readFromFile() {
-        requests = Converter.stringsToRequests(fileUtil.readDataFromFile());
-        if(requests.size() > 0)
-            nextId = requests.get(requests.size()-1).getId() + 1;
+    @Override
+    public void exportRequests(String file) throws IOException {
+        TextFileUtil.writeDataToFile(Converter.entitiesToStrings(requests),file);
+    }
+
+    @Override
+    public void importRequests(String file) throws IOException {
+        List<IRequest> requestsToAdd = Converter.stringsToRequests(TextFileUtil.readDataFromFile(file));
+        for (IRequest request : requestsToAdd) {
+            IRequest addedRequest = getRequest(request.getId());
+            if (addedRequest != null) {
+                requests.set(requests.indexOf(addedRequest),request);
+            } else {
+                addRequest(request);
+            }
+        }
     }
 }

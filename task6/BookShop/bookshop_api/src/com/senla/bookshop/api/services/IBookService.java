@@ -1,6 +1,8 @@
 package com.senla.bookshop.api.services;
 
 import com.senla.bookshop.api.entities.IBook;
+
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
@@ -18,7 +20,9 @@ public interface IBookService {
 
     List<IBook> sortBooks(Comparator<IBook> comparator, List<IBook> bookList);
 
-    void saveToFile();
+    void setBooks(List<IBook> books);
 
-    void readFromFile();
+    void exportBooks(String file) throws IOException;
+
+    void importBooks(String file) throws IOException;
 }

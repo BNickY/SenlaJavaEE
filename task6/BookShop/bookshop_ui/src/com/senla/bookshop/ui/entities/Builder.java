@@ -3,10 +3,7 @@ package com.senla.bookshop.ui.entities;
 import com.senla.bookshop.ui.actions.book.*;
 import com.senla.bookshop.ui.actions.exit.ExitAction;
 import com.senla.bookshop.ui.actions.order.*;
-import com.senla.bookshop.ui.actions.request.AddRequest;
-import com.senla.bookshop.ui.actions.request.GetAllRequests;
-import com.senla.bookshop.ui.actions.request.SortRequestsByAlphabet;
-import com.senla.bookshop.ui.actions.request.SortRequestsByAmount;
+import com.senla.bookshop.ui.actions.request.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +41,8 @@ public class Builder {
         booksMenuItems.add(new MenuItem("Get all books", new GetAllBooks(),sortAllBooksMenu));
         booksMenuItems.add(new MenuItem("Get book", new GetBook(),booksMenu));
         booksMenuItems.add(new MenuItem("Get unsold books", new GetUnsoldBooks(),sortUnsoldBooksMenu));
+        booksMenuItems.add(new MenuItem("Export books to CSV file", new ExportBooks(),booksMenu));
+        booksMenuItems.add(new MenuItem("Import books from CSV file", new ImportBooks(),booksMenu));
         booksMenuItems.add(new MenuItem("Back", null, mainMenu));
         booksMenu.setMenuItems(booksMenuItems);
 
@@ -69,6 +68,8 @@ public class Builder {
 
         List<MenuItem> ordersMenuItems = new ArrayList<>();
         ordersMenuItems.add(new MenuItem("Add order", new AddOrder(), orderMenu));
+        ordersMenuItems.add(new MenuItem("Copy order", new CopyOrder(), orderMenu));
+        ordersMenuItems.add(new MenuItem("Change information about the order", new ChangeOrderInfo(), orderMenu));
         ordersMenuItems.add(new MenuItem("Cancel order", new CancelOrder(), orderMenu));
         ordersMenuItems.add(new MenuItem("Complete an order", new CompleteAnOrder(), orderMenu));
         ordersMenuItems.add(new MenuItem("Get all orders", new GetAllOrders(), sortOrdersMenu));
@@ -78,6 +79,8 @@ public class Builder {
         ordersMenuItems.add(new MenuItem("Get order", new GetOrder(), orderMenu));
         ordersMenuItems.add(new MenuItem("Get performed orders",
                                             new GetPerformedOrders(), sortPerformedOrdersMenu));
+        ordersMenuItems.add(new MenuItem("Export orders to CSV file", new ExportOrders(), orderMenu));
+        ordersMenuItems.add(new MenuItem("Import orders from CSV file", new ImportOrders(), orderMenu));
         ordersMenuItems.add(new MenuItem("Back", null, mainMenu));
         orderMenu.setMenuItems(ordersMenuItems);
 
@@ -94,6 +97,8 @@ public class Builder {
         List<MenuItem> requestsMenuItems = new ArrayList<>();
         requestsMenuItems.add(new MenuItem("Add request", new AddRequest(), requestMenu));
         requestsMenuItems.add(new MenuItem("Get all requests ", new GetAllRequests(), sortRequestsMenu));
+        requestsMenuItems.add(new MenuItem("Export requests to CSV file", new ExportRequests(), requestMenu));
+        requestsMenuItems.add(new MenuItem("Import requests from CSV file", new ImportRequests(), requestMenu));
         requestsMenuItems.add(new MenuItem("Back", null, mainMenu));
         requestMenu.setMenuItems(requestsMenuItems);
 

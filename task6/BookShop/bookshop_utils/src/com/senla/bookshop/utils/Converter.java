@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Converter {
+    private static final String SEPARATOR = ",";
 
     public static String[] entitiesToStrings(List<? extends IEntity> entityList) {
         String[] strEntities = new String[entityList.size()];
@@ -25,29 +26,25 @@ public class Converter {
     }
 
     private static String convertEntityToString(IEntity entity){
+        StringBuilder str = new StringBuilder();
         if(entity.getClass() == Book.class){
             IBook book = (Book) entity;
-            return book.getId() + "/" +
-                    book.getTitle() + "/" +
-                    book.getAuthor() + "/" +
-                    book.getPrice() + "/" +
-                    book.getInStoke() + "/" +
-                    book.getPublishDate() + "/" +
-                    book.getReceiptDate();
+            str.append(book.getId()).append(SEPARATOR).append(book.getTitle()).append(SEPARATOR)
+                    .append(book.getAuthor()).append(SEPARATOR).append(book.getPrice()).append(SEPARATOR)
+                    .append(book.getInStoke()).append(SEPARATOR).append(book.getPublishDate()).append(SEPARATOR)
+                    .append(book.getReceiptDate());
+            return str.toString();
         }else if(entity.getClass() == Order.class){
             IOrder order = (Order) entity;
-            return order.getId() + "/" +
-                    order.getBookId() + "/" +
-                    order.getPrice() + "/" +
-                    order.getSubmissionDate() + "/" +
-                    order.getExecutionDate() + "/" +
-                    order.getOrderStatus();
+            str.append(order.getId()).append(SEPARATOR).append(order.getBookId()).append(SEPARATOR)
+                    .append(order.getPrice()).append(SEPARATOR).append(order.getSubmissionDate()).append(SEPARATOR)
+                    .append(order.getExecutionDate()).append(SEPARATOR).append(order.getOrderStatus());
+            return str.toString();
         }else if(entity.getClass() == Request.class){
             IRequest request = (Request) entity;
-            return request.getId() + "/" +
-                    request.getBookId() + "/" +
-                    request.getRequestDate() + "/" +
-                    request.getRequestStatus();
+            str.append(request.getId()).append(SEPARATOR).append(request.getBookId()).append(SEPARATOR)
+                    .append(request.getRequestDate()).append(SEPARATOR).append(request.getRequestStatus());
+            return str.toString();
         }
         return null;
     }
@@ -74,21 +71,21 @@ public class Converter {
     }
 
     private static IBook convertStringToBook(String string){
-        String[] values = string.split("/");
+        String[] values = string.split(SEPARATOR);
         return new Book(Long.valueOf(values[0]),values[1], values[2],
                 Double.valueOf(values[3]), Boolean.parseBoolean(values[4]),
                 LocalDate.parse(values[5]),LocalDate.parse(values[6]));
     }
 
     private static IOrder convertStringToOrder(String string){
-        String[] values = string.split("/");
+        String[] values = string.split(SEPARATOR);
         return new Order(Long.valueOf(values[0]),Long.valueOf(values[1]),
                 Double.valueOf(values[2]),LocalDate.parse(values[3]),LocalDate.parse(values[4]),
                 OrderStatus.valueOf(values[5]));
     }
 
     private static IRequest convertStringToRequest(String string){
-        String[] values = string.split("/");
+        String[] values = string.split(SEPARATOR);
         return new Request(Long.valueOf(values[0]), Long.valueOf(values[1]),
                 LocalDate.parse(values[2]), RequestStatus.valueOf(values[3]));
     }

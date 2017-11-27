@@ -2,9 +2,13 @@ package com.senla.bookshop.entities;
 
 import com.senla.bookshop.api.entities.IRequest;
 import com.senla.bookshop.api.entities.requeststatus.RequestStatus;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Request implements IRequest{
+public class Request implements IRequest,Serializable{
+
+    private static final long serialVersionUID = -7861950013080053702L;
     private long id;
     private long bookId;
     private LocalDate requestDate;

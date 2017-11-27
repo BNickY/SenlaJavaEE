@@ -1,10 +1,12 @@
 package com.senla.bookshop.entities;
 
 import com.senla.bookshop.api.entities.IBook;
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Book implements IBook{
+public class Book implements IBook, Serializable{
 
+    private static final long serialVersionUID = 2932823076071572959L;
     private long id;
     private String title;
     private String author;
