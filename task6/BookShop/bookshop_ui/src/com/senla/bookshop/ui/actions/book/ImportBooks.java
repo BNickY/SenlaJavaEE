@@ -20,8 +20,8 @@ public class ImportBooks implements IAction{
 
         try {
             Facade.getInstance().importBooks(path);
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+        } catch(NumberFormatException | IOException e) {
+            LOGGER.error(e);
         }
     }
 }

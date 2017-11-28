@@ -49,14 +49,14 @@ public class Converter {
         return null;
     }
 
-    public static List<IBook> stringsToBooks(String[] strArray) {
+    public static List<IBook> stringsToBooks(String[] strArray){
         List<IBook> books = new ArrayList<>();
         for (String string: strArray)
             books.add(convertStringToBook(string));
         return books;
     }
 
-    public static List<IOrder> stringsToOrders(String[] strArray) {
+    public static List<IOrder> stringsToOrders(String[] strArray){
         List<IOrder> orders = new ArrayList<>();
         for (String string : strArray)
             orders.add(convertStringToOrder(string));

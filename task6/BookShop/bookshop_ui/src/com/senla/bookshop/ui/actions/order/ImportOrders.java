@@ -19,8 +19,8 @@ public class ImportOrders implements IAction{
 
         try {
             Facade.getInstance().importOrders(path);
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+        } catch(NumberFormatException | IOException e) {
+            LOGGER.error(e);
         }
     }
 }

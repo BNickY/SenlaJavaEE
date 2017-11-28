@@ -19,8 +19,8 @@ public class ImportRequests implements IAction{
 
         try {
             Facade.getInstance().importRequests(path);
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+        }catch(NumberFormatException | IOException e) {
+            LOGGER.error(e);
         }
     }
 }
