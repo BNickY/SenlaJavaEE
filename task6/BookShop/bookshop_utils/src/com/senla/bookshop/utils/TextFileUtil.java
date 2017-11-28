@@ -1,42 +1,35 @@
 package com.senla.bookshop.utils;
 
-import com.danco.training.TextFileWorker;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TextFileUtil {
-    private String filePath;
-    private TextFileWorker textFileWorker;
 
-    public TextFileUtil(String filePath) {
-        this.filePath = filePath;
-    }
-
-    public void writeDataToFile(String[] strArray){
+    public static void writeDataToFile(String[] strArray, String filePath)throws IOException{
         Path path = Paths.get(filePath);
         if(!Files.exists(path)) {
-            try {
-                Files.createFile(path);
-            } catch (IOException e) {
-                System.out.println(e.toString());
+            Files.createFile(path);
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path.toFile()))) {
+            for(String str : strArray) {
+                writer.write(str+"\n");
             }
         }
-        textFileWorker = new TextFileWorker(filePath);
-        textFileWorker.writeToFile(strArray);
     }
 
-    public String[] readDataFromFile() {
-        Path path = Paths.get(filePath);
-        if(!Files.exists(path)) {
-            try {
-                Files.createFile(path);
-            } catch (IOException e) {
-                System.out.println(e.toString());
+    public static String[] readDataFromFile(String filePath) throws IOException{
+
+        List<String> strings = new ArrayList<>();
+        String line;
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            while ((line = br.readLine()) != null) {
+                strings.add(line);
             }
+            return strings.toArray(new String[0]);
         }
-        textFileWorker = new TextFileWorker(filePath);
-        return textFileWorker.readFromFile();
     }
 }

@@ -11,6 +11,8 @@ import com.senla.bookshop.repositories.BookRepository;
 import com.senla.bookshop.repositories.OrderRepository;
 import com.senla.bookshop.repositories.RequestRepository;
 import com.senla.bookshop.utils.DateUtil;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -84,20 +86,26 @@ public class BookService implements IBookService {
         return bookRepository.getBook(id);
     }
 
-    @Override
-    public void saveToFile() {
-        bookRepository.saveToFile();
-    }
-
-    @Override
-    public void readFromFile() {
-        bookRepository.readFromFile();
-    }
 
     @Override
     public List<IBook> sortBooks(Comparator<IBook> comparator, List<IBook> bookList) {
         List<IBook> books = new ArrayList<>(bookList);
         books.sort(comparator);
         return books;
+    }
+
+    @Override
+    public void setBooks(List<IBook> books) {
+        bookRepository.setBooks(books);
+    }
+
+    @Override
+    public void exportBooks(String file) throws IOException {
+        bookRepository.exportBooks(file);
+    }
+
+    @Override
+    public void importBooks(String file) throws IOException {
+        bookRepository.importBooks(file);
     }
 }

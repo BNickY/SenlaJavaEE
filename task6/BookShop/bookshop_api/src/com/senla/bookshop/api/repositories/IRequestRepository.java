@@ -1,6 +1,8 @@
 package com.senla.bookshop.api.repositories;
 
 import com.senla.bookshop.api.entities.IRequest;
+
+import java.io.IOException;
 import java.util.List;
 
 public interface IRequestRepository {
@@ -11,7 +13,9 @@ public interface IRequestRepository {
 
     IRequest getRequest(long id);
 
-    void saveToFile();
+    void setRequests(List<IRequest> requests);
 
-    void readFromFile();
+    void exportRequests(String file) throws IOException;
+
+    void importRequests(String file) throws IOException;
 }

@@ -9,10 +9,17 @@ import com.senla.bookshop.api.facade.IFacade;
 import com.senla.bookshop.api.services.*;
 import com.senla.bookshop.config.PropertyStorage;
 import com.senla.bookshop.services.*;
+import com.senla.bookshop.utils.SerializationUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Facade implements IFacade {
+    private static final Logger LOGGER = LogManager.getLogger(Facade.class);
     private static Facade facade;
     private PropertyStorage properties = PropertyStorage.getInstance();
     private IBookService bookService = new BookService(properties.getMonthsToSale(), properties.isRequestMarked());
@@ -93,6 +100,16 @@ public class Facade implements IFacade {
     @Override
     public List<IBook> sortUnsoldBooksByReceiptDate() throws DataNotExistException {
         return bookService.sortBooks(new ReceiptDateComparator(),getUnsoldBooks());
+    }
+
+    @Override
+    public void exportBooks(String file) throws IOException {
+        bookService.exportBooks(file);
+    }
+
+    @Override
+    public void importBooks(String file) throws IOException {
+        bookService.importBooks(file);
     }
 
     @Override
@@ -189,6 +206,16 @@ public class Facade implements IFacade {
     }
 
     @Override
+    public void exportOrders(String file) throws IOException {
+        orderService.exportOrders(file);
+    }
+
+    @Override
+    public void importOrders(String file) throws IOException {
+        orderService.importOrders(file);
+    }
+
+    @Override
     public List<IRequest> getAllRequests() throws DataNotExistException {
         if(requestService.getAllRequests().size() > 0)
             return requestService.getAllRequests();
@@ -222,16 +249,40 @@ public class Facade implements IFacade {
     }
 
     @Override
+    public void exportRequests(String file) throws IOException {
+        requestService.exportRequests(file);
+    }
+
+    @Override
+    public void importRequests(String file) throws IOException {
+        requestService.importRequests(file);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public void load() {
-        bookService.readFromFile();
-        orderService.readFromFile();
-        requestService.readFromFile();
+        List<Object> entityList = null;
+        try {
+            entityList = SerializationUtil.loadData(PropertyStorage.getInstance().getDataFilePath());
+        } catch (ClassNotFoundException | IOException e) {
+            LOGGER.error(e.getMessage());
+        }
+        if(entityList == null) return;
+        bookService.setBooks((List<IBook>) entityList.get(0));
+        orderService.setOrders((List<IOrder>) entityList.get(1));
+        requestService.setRequests((List<IRequest>) entityList.get(2));
     }
 
     @Override
     public void exit(){
-        bookService.saveToFile();
-        orderService.saveToFile();
-        requestService.saveToFile();
+        List<Object> entityList = new ArrayList<>();
+        entityList.add(bookService.getAllBooks());
+        entityList.add(orderService.getAllOrders());
+        entityList.add(requestService.getAllRequests());
+        try {
+            SerializationUtil.saveData(entityList,PropertyStorage.getInstance().getDataFilePath());
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+        }
     }
 }

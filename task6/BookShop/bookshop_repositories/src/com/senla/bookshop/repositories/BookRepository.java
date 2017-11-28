@@ -4,13 +4,13 @@ import com.senla.bookshop.api.entities.IBook;
 import com.senla.bookshop.api.repositories.IBookRepository;
 import com.senla.bookshop.utils.Converter;
 import com.senla.bookshop.utils.TextFileUtil;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookRepository implements IBookRepository{
     private static BookRepository bookRepository;
     private List<IBook> books = new ArrayList<>();
-    private TextFileUtil fileUtil = new TextFileUtil("books.txt");
     private static long nextId = 0;
 
     private BookRepository(){}
@@ -42,13 +42,28 @@ public class BookRepository implements IBookRepository{
         return null;
     }
 
-    public void saveToFile() {
-        fileUtil.writeDataToFile(Converter.entitiesToStrings(books));
+    @Override
+    public void setBooks(List<IBook> books) {
+        this.books = books;
+        if(this.books.size() > 0)
+            nextId = this.books.get(this.books.size()-1).getId() + 1;
     }
 
-    public void readFromFile() {
-        books = Converter.stringsToBooks(fileUtil.readDataFromFile());
-        if(books.size() > 0)
-            nextId = books.get(books.size()-1).getId() + 1;
+    @Override
+    public void exportBooks(String file) throws IOException {
+        TextFileUtil.writeDataToFile(Converter.entitiesToStrings(books),file);
+    }
+
+    @Override
+    public void importBooks(String file) throws IOException {
+       List<IBook> booksToAdd = Converter.stringsToBooks(TextFileUtil.readDataFromFile(file));
+        for (IBook book : booksToAdd) {
+            IBook addedBook = getBook(book.getId());
+            if (addedBook != null) {
+                books.set(books.indexOf(addedBook),book);
+            } else {
+                addBook(book);
+            }
+        }
     }
 }

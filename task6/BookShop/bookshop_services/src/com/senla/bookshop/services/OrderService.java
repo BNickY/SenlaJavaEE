@@ -6,6 +6,8 @@ import com.senla.bookshop.api.repositories.IOrderRepository;
 import com.senla.bookshop.api.services.IOrderService;
 import com.senla.bookshop.repositories.BookRepository;
 import com.senla.bookshop.repositories.OrderRepository;
+
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -102,20 +104,26 @@ public class OrderService implements IOrderService {
         }
     }
 
-    @Override
-    public void saveToFile() {
-        orderRepository.saveToFile();
-    }
-
-    @Override
-    public void readFromFile() {
-        orderRepository.readFromFile();
-    }
 
     @Override
     public List<IOrder> sortOrders(Comparator<IOrder> comparator, List<IOrder> orderList) {
         List<IOrder> orders = new ArrayList<>(orderList);
         orders.sort(comparator);
         return orders;
+    }
+
+    @Override
+    public void setOrders(List<IOrder> orders) {
+        orderRepository.setOrders(orders);
+    }
+
+    @Override
+    public void exportOrders(String file) throws IOException {
+        orderRepository.exportOrders(file);
+    }
+
+    @Override
+    public void importOrders(String file) throws IOException {
+        orderRepository.importOrders(file);
     }
 }
