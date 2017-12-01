@@ -1,9 +1,11 @@
 package com.senla.bookshop.repositories;
 
 import com.senla.bookshop.api.entities.IBook;
+import com.senla.bookshop.api.exeptions.FormatException;
 import com.senla.bookshop.api.repositories.IBookRepository;
 import com.senla.bookshop.utils.Converter;
 import com.senla.bookshop.utils.TextFileUtil;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +17,9 @@ public class BookRepository implements IBookRepository{
 
     private BookRepository(){}
 
-    public static synchronized BookRepository getInstance(){
+    public static BookRepository getInstance(){
         if(bookRepository == null)
             bookRepository = new BookRepository();
-
         return bookRepository;
     }
 
@@ -32,8 +33,13 @@ public class BookRepository implements IBookRepository{
         books.add(book);
     }
 
-    public void deleteBook(long id){
-        books.remove(getBook(id));
+    public boolean deleteBook(long id){
+        IBook book = getBook(id);
+        if(book != null){
+            book.setInStoke(false);
+            return true;
+        }
+        return false;
     }
 
     public IBook getBook(long id){
@@ -55,7 +61,7 @@ public class BookRepository implements IBookRepository{
     }
 
     @Override
-    public void importBooks(String file) throws IOException {
+    public void importBooks(String file) throws IOException, FormatException {
        List<IBook> booksToAdd = Converter.stringsToBooks(TextFileUtil.readDataFromFile(file));
         for (IBook book : booksToAdd) {
             IBook addedBook = getBook(book.getId());

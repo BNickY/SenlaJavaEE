@@ -1,7 +1,9 @@
 package com.senla.bookshop.services;
 
+import com.senla.bookshop.api.entities.IBook;
 import com.senla.bookshop.api.entities.IOrder;
 import com.senla.bookshop.api.entities.orderstatus.OrderStatus;
+import com.senla.bookshop.api.exeptions.FormatException;
 import com.senla.bookshop.api.repositories.IOrderRepository;
 import com.senla.bookshop.api.services.IOrderService;
 import com.senla.bookshop.repositories.BookRepository;
@@ -27,19 +29,32 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void addOrder(IOrder order, double price) {
-        order.setPrice(price);
-        order.setSubmissionDate(LocalDate.now());
-        order.setExecutionDate(order.getSubmissionDate());
-        order.setOrderStatus(OrderStatus.ACCEPTED);
-        orderRepository.addOrder(order);
+    public boolean addOrder(IOrder order) {
+        IBook book = BookRepository.getInstance().getBook(order.getBookId());
+        if(book != null && book.getInStoke()) {
+            if (order.getId() != -1) {
+                order.setPrice(book.getPrice());
+                order.setSubmissionDate(LocalDate.now());
+                order.setExecutionDate(order.getSubmissionDate());
+                order.setOrderStatus(OrderStatus.ACCEPTED);
+            }
+            orderRepository.addOrder(order);
+            return true;
+        }else
+            return false;
     }
 
     @Override
-    public void cancelOrder(long id) {
+    public boolean cancelOrder(long id) {
         IOrder order = orderRepository.getOrder(id);
-        order.setOrderStatus(OrderStatus.CANCELED);
-        order.setExecutionDate(LocalDate.now());
+        if(order != null) {
+            if(order.getOrderStatus() == OrderStatus.ACCEPTED){
+                order.setOrderStatus(OrderStatus.CANCELED);
+                order.setExecutionDate(LocalDate.now());
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -92,16 +107,20 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void completeAnOrder(long id) {
+    public boolean completeAnOrder(long id) {
         IOrder order = getOrder(id);
-        BookRepository bookRepository = BookRepository.getInstance();
-        order.setExecutionDate(LocalDate.now());
-        if(bookRepository.getBook(order.getBookId()).getInStoke()){
-            bookRepository.getBook(order.getBookId()).setInStoke(false);
-            order.setOrderStatus(OrderStatus.PERFORMED);
-        }else{
-            order.setOrderStatus(OrderStatus.CANCELED);
-        }
+        if(order != null && order.getOrderStatus() == OrderStatus.ACCEPTED) {
+            BookRepository bookRepository = BookRepository.getInstance();
+            order.setExecutionDate(LocalDate.now());
+            if (bookRepository.getBook(order.getBookId()).getInStoke()) {
+                bookRepository.getBook(order.getBookId()).setInStoke(false);
+                order.setOrderStatus(OrderStatus.PERFORMED);
+            } else {
+                order.setOrderStatus(OrderStatus.CANCELED);
+            }
+            return true;
+        }else
+            return false;
     }
 
 
@@ -123,7 +142,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void importOrders(String file) throws IOException {
+    public void importOrders(String file) throws IOException, FormatException {
         orderRepository.importOrders(file);
     }
 }

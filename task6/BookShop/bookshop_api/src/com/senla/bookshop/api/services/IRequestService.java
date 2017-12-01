@@ -1,6 +1,7 @@
 package com.senla.bookshop.api.services;
 
 import com.senla.bookshop.api.entities.IRequest;
+import com.senla.bookshop.api.exeptions.FormatException;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,7 +10,7 @@ public interface IRequestService {
 
     List<IRequest> getAllRequests();
 
-    void addRequest(IRequest request);
+    boolean addRequest(IRequest request);
 
     void cancelRequest(long id);
 
@@ -23,5 +24,5 @@ public interface IRequestService {
 
     void exportRequests(String file) throws IOException;
 
-    void importRequests(String file) throws IOException;
+    void importRequests(String file) throws IOException, FormatException;
 }

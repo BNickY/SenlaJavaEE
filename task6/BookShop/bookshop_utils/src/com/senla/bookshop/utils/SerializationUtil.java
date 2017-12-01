@@ -1,6 +1,5 @@
 package com.senla.bookshop.utils;
 
-import com.senla.bookshop.api.entities.IEntity;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;

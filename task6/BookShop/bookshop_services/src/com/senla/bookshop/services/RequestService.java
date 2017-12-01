@@ -1,7 +1,9 @@
 package com.senla.bookshop.services;
 
+import com.senla.bookshop.api.entities.IBook;
 import com.senla.bookshop.api.entities.IRequest;
 import com.senla.bookshop.api.entities.requeststatus.RequestStatus;
+import com.senla.bookshop.api.exeptions.FormatException;
 import com.senla.bookshop.api.repositories.IRequestRepository;
 import com.senla.bookshop.api.services.IRequestService;
 import com.senla.bookshop.repositories.BookRepository;
@@ -25,10 +27,15 @@ public class RequestService implements IRequestService {
     }
 
     @Override
-    public void addRequest(IRequest request) {
-        request.setRequestStatus(RequestStatus.ACCEPTED);
-        request.setRequestDate(LocalDate.now());
-        requestRepository.addRequest(request);
+    public boolean addRequest(IRequest request) {
+        IBook book = BookRepository.getInstance().getBook(request.getBookId());
+        if(book != null && !book.getInStoke()) {
+            request.setRequestStatus(RequestStatus.ACCEPTED);
+            request.setRequestDate(LocalDate.now());
+            requestRepository.addRequest(request);
+            return true;
+        }else
+            return false;
     }
 
     @Override
@@ -113,7 +120,7 @@ public class RequestService implements IRequestService {
     }
 
     @Override
-    public void importRequests(String file) throws IOException {
+    public void importRequests(String file) throws IOException, FormatException {
         requestRepository.importRequests(file);
     }
 }

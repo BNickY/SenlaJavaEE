@@ -78,7 +78,9 @@ public class Order implements Cloneable,IOrder,Serializable{
 
     @Override
     public Order clone() throws CloneNotSupportedException {
-        return (Order)super.clone();
+        Order order = (Order)super.clone();
+        order.setId(-1L);
+        return order;
     }
 
     @Override
