@@ -1,6 +1,7 @@
 package com.senla.bookshop.repositories;
 
 import com.senla.bookshop.api.entities.IRequest;
+import com.senla.bookshop.api.exeptions.FormatException;
 import com.senla.bookshop.api.repositories.IRequestRepository;
 import com.senla.bookshop.utils.Converter;
 import com.senla.bookshop.utils.TextFileUtil;
@@ -15,10 +16,9 @@ public class RequestRepository implements IRequestRepository{
 
     private RequestRepository(){}
 
-    public static synchronized RequestRepository getInstance(){
+    public static RequestRepository getInstance(){
         if(requestRepository == null)
             requestRepository = new RequestRepository();
-
         return requestRepository;
     }
 
@@ -51,7 +51,7 @@ public class RequestRepository implements IRequestRepository{
     }
 
     @Override
-    public void importRequests(String file) throws IOException {
+    public void importRequests(String file) throws IOException, FormatException {
         List<IRequest> requestsToAdd = Converter.stringsToRequests(TextFileUtil.readDataFromFile(file));
         for (IRequest request : requestsToAdd) {
             IRequest addedRequest = getRequest(request.getId());

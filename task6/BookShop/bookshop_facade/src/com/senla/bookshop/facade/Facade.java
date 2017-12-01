@@ -3,8 +3,7 @@ package com.senla.bookshop.facade;
 import com.senla.bookshop.api.comparators.book.*;
 import com.senla.bookshop.api.comparators.order.*;
 import com.senla.bookshop.api.entities.*;
-import com.senla.bookshop.api.entities.orderstatus.OrderStatus;
-import com.senla.bookshop.api.exeptions.DataNotExistException;
+import com.senla.bookshop.api.exeptions.FormatException;
 import com.senla.bookshop.api.facade.IFacade;
 import com.senla.bookshop.api.services.*;
 import com.senla.bookshop.config.PropertyStorage;
@@ -28,7 +27,7 @@ public class Facade implements IFacade {
 
     private Facade() {}
 
-    public static synchronized Facade getInstance(){
+    public static Facade getInstance(){
         if(facade == null) {
             facade = new Facade();
         }
@@ -41,118 +40,100 @@ public class Facade implements IFacade {
     }
 
     @Override
-    public void deleteBook(long id) throws DataNotExistException{
-        if(getBook(id) != null)
-            bookService.deleteBook(id);
-
+    public boolean deleteBook(long id){
+       return bookService.deleteBook(id);
     }
 
     @Override
-    public IBook getBook(long id) throws DataNotExistException {
-        IBook book = bookService.getBook(id);
-        if(book != null)
-            return book;
-        else
-            throw new DataNotExistException("There is no book with such id!");
+    public IBook getBook(long id) {
+        return bookService.getBook(id);
     }
 
     @Override
-    public List<IBook> getAllBooks() throws DataNotExistException{
-        if(bookService.getAllBooks().size() > 0)
-            return bookService.getAllBooks();
-        else
-            throw new DataNotExistException("There are no books in stock.");
+    public List<IBook> getAllBooks() {
+        return bookService.getAllBooks();
     }
 
     @Override
-    public List<IBook> getUnsoldBooks() throws DataNotExistException {
-        if(bookService.getUnsoldBooks().size() > 0)
-            return bookService.getUnsoldBooks();
-        else
-            throw new DataNotExistException("There are no unsold books in stock.");
+    public List<IBook> getUnsoldBooks() {
+        return bookService.getUnsoldBooks();
     }
 
     @Override
-    public List<IBook> sortBooksByPrice() throws DataNotExistException {
+    public List<IBook> sortBooksByPrice() {
         return bookService.sortBooks(new BookPriceComparator(),getAllBooks());
     }
 
     @Override
-    public List<IBook> sortBooksByTitle() throws DataNotExistException {
+    public List<IBook> sortBooksByTitle() {
         return bookService.sortBooks(new TitleComparator(),getAllBooks());
     }
 
     @Override
-    public List<IBook> sortBooksByPublishDate() throws DataNotExistException {
+    public List<IBook> sortBooksByPublishDate() {
         return bookService.sortBooks(new PublishDateComparator(),getAllBooks());
     }
 
     @Override
-    public List<IBook> sortBooksByExistenceInStoke() throws DataNotExistException {
+    public List<IBook> sortBooksByExistenceInStoke() {
         return bookService.sortBooks(new InStokeComparator(),getAllBooks());
     }
 
     @Override
-    public List<IBook> sortUnsoldBooksByPrice() throws DataNotExistException {
+    public List<IBook> sortUnsoldBooksByPrice() {
         return bookService.sortBooks(new BookPriceComparator(),getUnsoldBooks());
     }
 
     @Override
-    public List<IBook> sortUnsoldBooksByReceiptDate() throws DataNotExistException {
+    public List<IBook> sortUnsoldBooksByReceiptDate() {
         return bookService.sortBooks(new ReceiptDateComparator(),getUnsoldBooks());
     }
 
     @Override
-    public void exportBooks(String file) throws IOException {
-        bookService.exportBooks(file);
+    public boolean exportBooks(String file) {
+        try {
+            bookService.exportBooks(file);
+            return true;
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+            return false;
+        }
     }
 
     @Override
-    public void importBooks(String file) throws IOException {
-        bookService.importBooks(file);
+    public boolean importBooks(String file) {
+        try {
+            bookService.importBooks(file);
+            return true;
+        } catch (IOException | FormatException e) {
+            LOGGER.error(e.getMessage());
+            return false;
+        }
     }
 
     @Override
-    public void addOrder(IOrder order) throws DataNotExistException {
-        IBook book = getBook(order.getBookId());
-        if( book.getInStoke())
-            orderService.addOrder(order,book.getPrice());
-        else
-            throw new DataNotExistException("This book is already sold. But you can make request.");
+    public boolean addOrder(IOrder order) {
+        return orderService.addOrder(order);
     }
 
     @Override
-    public void cancelOrder(long id) throws DataNotExistException {
-        IOrder order = getOrder(id);
-        if(order.getOrderStatus() != OrderStatus.ACCEPTED)
-            throw new DataNotExistException("This order is canceled or already performed.");
-        else
-            orderService.cancelOrder(id);
+    public boolean cancelOrder(long id){
+        return orderService.cancelOrder(id);
     }
 
     @Override
-    public IOrder getOrder(long id) throws DataNotExistException {
-        IOrder order = orderService.getOrder(id);
-        if (order != null)
-            return order;
-        else
-            throw new DataNotExistException("There is no order with such id!");
+    public IOrder getOrder(long id) {
+        return orderService.getOrder(id);
     }
 
     @Override
-    public List<IOrder> getAllOrders() throws DataNotExistException {
-        if(orderService.getAllOrders().size() > 0)
-            return orderService.getAllOrders();
-        else
-            throw new DataNotExistException("There are no orders.");
+    public List<IOrder> getAllOrders() {
+        return orderService.getAllOrders();
     }
 
     @Override
-    public List<IOrder> getPerformedOrders(LocalDate startDate, LocalDate endDate) throws DataNotExistException {
-        if(orderService.getPerformedOrders(startDate,endDate).size() > 0)
-            return orderService.getPerformedOrders(startDate,endDate);
-        else
-            throw new DataNotExistException("There are no performed orders.");
+    public List<IOrder> getPerformedOrders(LocalDate startDate, LocalDate endDate)  {
+        return orderService.getPerformedOrders(startDate,endDate);
     }
 
     @Override
@@ -166,123 +147,128 @@ public class Facade implements IFacade {
     }
 
     @Override
-    public void completeAnOrder(long id) throws DataNotExistException {
-        IOrder order = getOrder(id);
-        if(order.getOrderStatus() == OrderStatus.ACCEPTED)
-            orderService.completeAnOrder(id);
-        else
-            throw new DataNotExistException("This order is canceled or already performed.");
+    public boolean completeAnOrder(long id) {
+        return orderService.completeAnOrder(id);
     }
 
     @Override
-    public List<IOrder> sortOrdersByPrice() throws DataNotExistException {
+    public List<IOrder> sortOrdersByPrice() {
         return orderService.sortOrders(new OrderPriceComparator(),getAllOrders());
     }
 
     @Override
-    public List<IOrder> sortOrdersByStatus() throws DataNotExistException {
+    public List<IOrder> sortOrdersByStatus() {
         return orderService.sortOrders(new StatusComparator(), getAllOrders());
     }
 
     @Override
-    public List<IOrder> sortOrdersByExecutionDate() throws DataNotExistException {
+    public List<IOrder> sortOrdersByExecutionDate() {
         return orderService.sortOrders(new ExecutionDateComparator(),getAllOrders());
     }
 
     @Override
-    public List<IOrder> sortPerformedOrdersByDate() throws DataNotExistException {
-        if(orderService.getPerformedOrders().size() > 0)
-            return orderService.sortOrders(new ExecutionDateComparator(), orderService.getPerformedOrders());
-        else
-            throw new DataNotExistException("There are no performed orders.");
+    public List<IOrder> sortPerformedOrdersByDate() {
+        return orderService.sortOrders(new ExecutionDateComparator(), orderService.getPerformedOrders());
     }
 
     @Override
-    public List<IOrder> sortPerformedOrdersByPrice() throws DataNotExistException{
-        if(orderService.getPerformedOrders().size() > 0)
-            return orderService.sortOrders(new OrderPriceComparator(), orderService.getPerformedOrders());
-        else
-            throw new DataNotExistException("There are no performed orders.");
+    public List<IOrder> sortPerformedOrdersByPrice() {
+        return orderService.sortOrders(new OrderPriceComparator(), orderService.getPerformedOrders());
     }
 
     @Override
-    public void exportOrders(String file) throws IOException {
-        orderService.exportOrders(file);
+    public boolean exportOrders(String file){
+        try {
+            orderService.exportOrders(file);
+            return true;
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+            return false;
+        }
     }
 
     @Override
-    public void importOrders(String file) throws IOException {
-        orderService.importOrders(file);
+    public boolean importOrders(String file){
+        try {
+            orderService.importOrders(file);
+            return true;
+        } catch (IOException | FormatException e) {
+            LOGGER.error(e.getMessage());
+            return false;
+        }
     }
 
     @Override
-    public List<IRequest> getAllRequests() throws DataNotExistException {
-        if(requestService.getAllRequests().size() > 0)
-            return requestService.getAllRequests();
-        else
-            throw new DataNotExistException("There are no requests.");
+    public List<IRequest> getAllRequests(){
+        return requestService.getAllRequests();
     }
 
     @Override
-    public void addRequest(IRequest request) throws DataNotExistException {
-        IBook book = getBook(request.getBookId());
-        if(!book.getInStoke())
-            requestService.addRequest(request);
-        else
-            throw new DataNotExistException("This book is in stock. You can buy it.");
+    public boolean addRequest(IRequest request)  {
+        return requestService.addRequest(request);
     }
 
     @Override
-    public List<IRequest> sortRequestsByAlphabet() throws DataNotExistException {
-        if(requestService.getAllRequests().size() > 0)
-            return requestService.sortRequestsByAlphabet();
-        else
-            throw new DataNotExistException("There are no requests.");
+    public List<IRequest> sortRequestsByAlphabet() {
+        return requestService.sortRequestsByAlphabet();
     }
 
     @Override
-    public List<IRequest> sortRequestsByAmount() throws DataNotExistException {
-        if(requestService.getAllRequests().size() > 0)
-            return requestService.sortRequestsByAmount();
-        else
-            throw new DataNotExistException("There are no requests.");
+    public List<IRequest> sortRequestsByAmount() {
+        return requestService.sortRequestsByAmount();
     }
 
     @Override
-    public void exportRequests(String file) throws IOException {
-        requestService.exportRequests(file);
+    public boolean exportRequests(String file) {
+        try {
+            requestService.exportRequests(file);
+            return true;
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+            return false;
+        }
     }
 
     @Override
-    public void importRequests(String file) throws IOException {
-        requestService.importRequests(file);
+    public boolean importRequests(String file) {
+        try {
+            requestService.importRequests(file);
+            return true;
+        } catch (IOException | FormatException e) {
+            LOGGER.error(e.getMessage());
+            return false;
+        }
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void load() {
-        List<Object> entityList = null;
+    public boolean load() {
+        List<Object> entityList;
         try {
             entityList = SerializationUtil.loadData(PropertyStorage.getInstance().getDataFilePath());
         } catch (ClassNotFoundException | IOException e) {
             LOGGER.error(e.getMessage());
+            return false;
         }
-        if(entityList == null) return;
+        if(entityList == null) return false;
         bookService.setBooks((List<IBook>) entityList.get(0));
         orderService.setOrders((List<IOrder>) entityList.get(1));
         requestService.setRequests((List<IRequest>) entityList.get(2));
+        return true;
     }
 
     @Override
-    public void exit(){
+    public boolean exit(){
         List<Object> entityList = new ArrayList<>();
         entityList.add(bookService.getAllBooks());
         entityList.add(orderService.getAllOrders());
         entityList.add(requestService.getAllRequests());
         try {
             SerializationUtil.saveData(entityList,PropertyStorage.getInstance().getDataFilePath());
+            return true;
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
+            return false;
         }
     }
 }

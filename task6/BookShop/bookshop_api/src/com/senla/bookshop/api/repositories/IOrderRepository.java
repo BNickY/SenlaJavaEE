@@ -1,6 +1,7 @@
 package com.senla.bookshop.api.repositories;
 
 import com.senla.bookshop.api.entities.IOrder;
+import com.senla.bookshop.api.exeptions.FormatException;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,5 +18,5 @@ public interface IOrderRepository {
 
     void exportOrders(String file) throws IOException;
 
-    void importOrders(String file) throws IOException;
+    void importOrders(String file) throws IOException, FormatException;
 }

@@ -4,23 +4,17 @@ import com.senla.bookshop.facade.Facade;
 import com.senla.bookshop.ui.api.IAction;
 import com.senla.bookshop.utils.ConsoleReader;
 import com.senla.bookshop.utils.Printer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 
 public class ImportOrders implements IAction{
-    private static final Logger LOGGER = LogManager.getLogger(ImportOrders.class);
 
     @Override
     public void execute() {
         Printer.printMessage("Input file path: ");
         String path = ConsoleReader.getNextLine();
-
-        try {
-            Facade.getInstance().importOrders(path);
-        } catch(NumberFormatException | IOException e) {
-            LOGGER.error(e);
-        }
+        if(Facade.getInstance().importOrders(path))
+            Printer.printMessage("Orders were imported.");
+        else
+            Printer.printMessage("Failed to import orders.");
     }
 }

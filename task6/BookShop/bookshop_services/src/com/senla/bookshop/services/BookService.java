@@ -5,6 +5,7 @@ import com.senla.bookshop.api.entities.IOrder;
 import com.senla.bookshop.api.entities.IRequest;
 import com.senla.bookshop.api.entities.orderstatus.OrderStatus;
 import com.senla.bookshop.api.entities.requeststatus.RequestStatus;
+import com.senla.bookshop.api.exeptions.FormatException;
 import com.senla.bookshop.api.repositories.IBookRepository;
 import com.senla.bookshop.api.services.IBookService;
 import com.senla.bookshop.repositories.BookRepository;
@@ -51,8 +52,9 @@ public class BookService implements IBookService {
         List<IRequest> requests = RequestRepository.getInstance().getRequests();
         List<IBook> books = new ArrayList<>(getAllBooks());
         if (books.contains(book)) {
-            books.get(books.indexOf(book)).setInStoke(true);
-            book.setReceiptDate(LocalDate.now());
+            IBook oldBook = books.get(books.indexOf(book));
+            oldBook.setInStoke(true);
+            oldBook.setReceiptDate(LocalDate.now());
             if(isRequestMarked) {
                 for (IRequest request : requests)
                     if (request.getBookId() == book.getId())
@@ -67,18 +69,21 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public void deleteBook(long id) {
-        bookRepository.deleteBook(id);
-        List<IOrder> orders = OrderRepository.getInstance().getOrders();
-        List<IRequest> requests = RequestRepository.getInstance().getRequests();
-        for(IRequest request : requests)
-            if(request.getBookId() == id)
-                request.setRequestStatus(RequestStatus.CANCELED);
-        for(IOrder order : orders)
-            if(order.getBookId() == id){
-                order.setExecutionDate(LocalDate.now());
-                order.setOrderStatus(OrderStatus.CANCELED);
-            }
+    public boolean deleteBook(long id) {
+        if(bookRepository.deleteBook(id)) {
+            List<IOrder> orders = OrderRepository.getInstance().getOrders();
+            List<IRequest> requests = RequestRepository.getInstance().getRequests();
+            for (IRequest request : requests)
+                if (request.getBookId() == id && request.getRequestStatus().compareTo(RequestStatus.ACCEPTED)==0)
+                    request.setRequestStatus(RequestStatus.CANCELED);
+            for (IOrder order : orders)
+                if (order.getBookId() == id && order.getOrderStatus().compareTo(OrderStatus.ACCEPTED)==0) {
+                    order.setExecutionDate(LocalDate.now());
+                    order.setOrderStatus(OrderStatus.CANCELED);
+                }
+            return true;
+        }else
+            return false;
     }
 
     @Override
@@ -105,7 +110,7 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public void importBooks(String file) throws IOException {
+    public void importBooks(String file) throws IOException, FormatException {
         bookRepository.importBooks(file);
     }
 }

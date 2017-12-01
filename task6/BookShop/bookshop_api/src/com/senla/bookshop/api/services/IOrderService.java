@@ -1,6 +1,7 @@
 package com.senla.bookshop.api.services;
 
 import com.senla.bookshop.api.entities.IOrder;
+import com.senla.bookshop.api.exeptions.FormatException;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -11,9 +12,9 @@ public interface IOrderService {
 
     List<IOrder> getAllOrders();
 
-    void addOrder(IOrder order, double price);
+    boolean addOrder(IOrder order);
 
-    void cancelOrder(long id);
+    boolean cancelOrder(long id);
 
     IOrder getOrder(long id);
 
@@ -25,7 +26,7 @@ public interface IOrderService {
 
     int getAmountOfPerformedOrders(LocalDate startDate, LocalDate endDate);
 
-    void completeAnOrder(long id);
+    boolean completeAnOrder(long id);
 
     List<IOrder> sortOrders(Comparator<IOrder> comparator, List<IOrder> orderList);
 
@@ -33,5 +34,5 @@ public interface IOrderService {
 
     void exportOrders(String file) throws IOException;
 
-    void importOrders(String file) throws IOException;
+    void importOrders(String file) throws IOException, FormatException;
 }

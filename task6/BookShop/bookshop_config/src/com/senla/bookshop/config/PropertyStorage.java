@@ -1,4 +1,5 @@
 package com.senla.bookshop.config;
+
 import java.util.Properties;
 
 public class PropertyStorage {
@@ -10,16 +11,7 @@ public class PropertyStorage {
     private boolean isRequestMarked;
     private String dataFilePath;
 
-    private PropertyStorage() {
-        getProperties();
-    }
-
-    public static synchronized PropertyStorage getInstance(){
-        if(propertyStorage == null) {
-            propertyStorage = new PropertyStorage();
-        }
-        return propertyStorage;
-    }
+    private PropertyStorage() {}
 
     private void getProperties(){
         Properties properties = PropertyReader.getPropertiesFromFile();
@@ -30,7 +22,16 @@ public class PropertyStorage {
         }else {
             monthsToSale = DEFAULT_MONTHS_TO_SALE;
             isRequestMarked = DEFAULT_IS_REQUEST_MARKED;
+            dataFilePath = DEFAULT_DATA_FILE_PATH;
         }
+    }
+
+    public static PropertyStorage getInstance(){
+        if(propertyStorage == null) {
+            propertyStorage = new PropertyStorage();
+            propertyStorage.getProperties();
+        }
+        return propertyStorage;
     }
 
     public String getDataFilePath() {

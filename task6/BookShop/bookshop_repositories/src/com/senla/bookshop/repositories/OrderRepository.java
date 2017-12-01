@@ -1,6 +1,7 @@
 package com.senla.bookshop.repositories;
 
 import com.senla.bookshop.api.entities.IOrder;
+import com.senla.bookshop.api.exeptions.FormatException;
 import com.senla.bookshop.api.repositories.IOrderRepository;
 import com.senla.bookshop.utils.Converter;
 import com.senla.bookshop.utils.TextFileUtil;
@@ -11,15 +12,14 @@ import java.util.List;
 
 public class OrderRepository implements IOrderRepository{
     private static OrderRepository orderRepository;
-    private List<IOrder> orders = new ArrayList<>();
     private static long nextId = 0;
+    private List<IOrder> orders = new ArrayList<>();
 
     private OrderRepository(){}
 
-    public static synchronized OrderRepository getInstance(){
+    public static OrderRepository getInstance(){
         if(orderRepository == null)
             orderRepository = new OrderRepository();
-
         return orderRepository;
     }
 
@@ -52,7 +52,7 @@ public class OrderRepository implements IOrderRepository{
     }
 
     @Override
-    public void importOrders(String file) throws IOException {
+    public void importOrders(String file) throws IOException, FormatException {
         List<IOrder> ordersToAdd = Converter.stringsToOrders(TextFileUtil.readDataFromFile(file));
         for (IOrder order : ordersToAdd) {
             IOrder addedOrder = getOrder(order.getId());
